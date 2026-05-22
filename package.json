@@ -1,0 +1,35 @@
+{
+  "name": "tree-sitter-dilang",
+  "version": "0.1.0",
+  "description": "Tree-sitter grammar for the Dilang capability-native language",
+  "main": "bindings/node",
+  "keywords": ["parser", "tree-sitter", "dilang"],
+  "license": "MIT",
+  "dependencies": {
+    "node-addon-api": "^7.1.0",
+    "node-gyp-build": "^4.8.0"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.22.0"
+  },
+  "peerDependencies": {
+    "tree-sitter": "^0.21.0"
+  },
+  "peerDependenciesMeta": {
+    "tree-sitter": {
+      "optional": true
+    }
+  },
+  "scripts": {
+    "build": "tree-sitter generate",
+    "test": "tree-sitter test"
+  },
+  "tree-sitter": [
+    {
+      "scope": "source.dilang",
+      "file-types": ["di"],
+      "highlights": "queries/highlights.scm",
+      "injection-regex": "^dilang$"
+    }
+  ]
+}
