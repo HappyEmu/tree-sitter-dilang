@@ -41,9 +41,10 @@ module.exports = grammar({
     [$.tuple_type, $.parenthesized_expression],
     [$.generic_type, $.binary_expression],
     [$.block, $.expression_statement],
-    [$.using_directive, $.provide_binding],
-    [$.using_directive, $._expression],
-    [$.using_directive],
+    [$.wiring_spread, $.with_binding],
+    [$.wiring_spread, $._expression],
+    [$.wiring_spread],
+    [$.with_expression],
     [$.call_expression],
     [$.method_call],
   ],
@@ -83,7 +84,7 @@ module.exports = grammar({
       $.parameter_list,
       optional(seq('->', field('return_type', $._type))),
       repeat(choice($.requires_clause, $.raises_clause, $.where_clause)),
-      $.block,
+      choice($.block, seq('=', field('body', $._expression), optional(';'))),
     ),
 
     parameter_list: $ => seq('(', sepBy(',', $.parameter), optional(','), ')'),
@@ -129,7 +130,7 @@ module.exports = grammar({
       $.member_block,
     ),
 
-    scope_annotation: $ => seq('@', sepBy1('|', $.type_identifier)),
+    scope_annotation: $ => prec.right(seq('@', sepBy1('|', $.lifetime_identifier))),
     extends_clause: $ => seq('extends', sepBy1('+', $._type)),
 
     member_block: $ => seq(
@@ -238,7 +239,11 @@ module.exports = grammar({
       field('value', $._type),
     ),
 
-    scope_definition: $ => seq('scope', field('name', $.type_identifier)),
+    scope_definition: $ => seq(
+      'scope',
+      field('name', $.lifetime_identifier),
+      optional(seq('under', field('parent', $.lifetime_identifier))),
+    ),
 
     test_block: $ => seq('test', field('name', $.string_literal), $.block),
 
@@ -251,6 +256,7 @@ module.exports = grammar({
       $.self_type,
       $.generic_type,
       $.optional_type,
+      $.array_type,
       $.function_type,
       $.tuple_type,
       $.row,
@@ -266,6 +272,8 @@ module.exports = grammar({
     type_arguments: $ => seq('<', sepBy1(',', $._type), '>'),
 
     optional_type: $ => prec(2, seq($._type, '?')),
+
+    array_type: $ => seq('[', $._type, ']'),
 
     function_type: $ => prec.right(seq(
       'fn',
@@ -370,7 +378,7 @@ module.exports = grammar({
       $.loop_expression,
       $.for_expression,
       $.while_expression,
-      $.provide_expression,
+      $.with_expression,
       $.stream_expression,
       $.select_expression,
       $.uncancellable_expression,
@@ -631,37 +639,41 @@ module.exports = grammar({
       field('body', $.block),
     ),
 
-    // `provide { ... }` is a Wiring value; `provide { ... } in { ... }` is an expression.
-    provide_expression: $ => seq(
-      'provide',
-      optional($.scope_annotation),
-      $.provide_body,
-      optional(seq('in', field('in_block', $.block))),
+    // `with [ ... ]` is a Wiring value; `with [ ... ] @ 'Scope { ... }`
+    // enters a scoped capability frame and evaluates the body.
+    with_expression: $ => choice(
+      prec.right(1, seq(
+        'with',
+        $.with_entries,
+        optional($.scope_annotation),
+        field('body', $.block),
+      )),
+      prec(-1, seq(
+        'with',
+        $.with_entries,
+        optional($.scope_annotation),
+      )),
     ),
 
-    // Entries in a provide block can be separated by comma or just newline.
+    // Entries in a with block can be separated by comma or just newline.
     // Trailing comma allowed.
-    provide_body: $ => seq(
-      '{',
+    with_entries: $ => seq(
+      '[',
       repeat(seq(
-        choice($.provide_binding, $.using_directive),
+        choice($.with_binding, $.wiring_spread),
         optional(','),
       )),
-      '}',
+      ']',
     ),
 
-    provide_binding: $ => seq(
+    with_binding: $ => seq(
       field('cap', $.type_identifier),
-      '=',
+      '<-',
       field('impl', $._expression),
-      optional(seq('@', field('scope', $.type_identifier))),
+      optional(seq('@', field('scope', $.lifetime_identifier))),
     ),
 
-    using_directive: $ => seq(
-      'using',
-      $._expression,
-      repeat(seq(',', $._expression)),
-    ),
+    wiring_spread: $ => seq('...', $._expression),
 
     stream_expression: $ => seq('stream', $.block),
 
@@ -684,6 +696,7 @@ module.exports = grammar({
     // PascalCase → type / capability / scope identifier.
     identifier: _ => /[a-z_][a-zA-Z0-9_]*/,
     type_identifier: _ => /[A-Z][a-zA-Z0-9_]*/,
+    lifetime_identifier: _ => /'[A-Z][a-zA-Z0-9_]*/,
   },
 });
 

@@ -92,10 +92,6 @@
         "named": true
       },
       {
-        "type": "provide_expression",
-        "named": true
-      },
-      {
         "type": "raise_expression",
         "named": true
       },
@@ -145,6 +141,10 @@
       },
       {
         "type": "while_expression",
+        "named": true
+      },
+      {
+        "type": "with_expression",
         "named": true
       }
     ]
@@ -222,6 +222,10 @@
     "named": true,
     "subtypes": [
       {
+        "type": "array_type",
+        "named": true
+      },
+      {
         "type": "function_type",
         "named": true
       },
@@ -265,6 +269,21 @@
         },
         {
           "type": "named_argument",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "array_type",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "_type",
           "named": true
         }
       ]
@@ -755,6 +774,16 @@
     "type": "function_definition",
     "named": true,
     "fields": {
+      "body": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "_expression",
+            "named": true
+          }
+        ]
+      },
       "name": {
         "multiple": false,
         "required": true,
@@ -1477,91 +1506,6 @@
     }
   },
   {
-    "type": "provide_binding",
-    "named": true,
-    "fields": {
-      "cap": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "type_identifier",
-            "named": true
-          }
-        ]
-      },
-      "impl": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "_expression",
-            "named": true
-          }
-        ]
-      },
-      "scope": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "type_identifier",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "provide_body",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "provide_binding",
-          "named": true
-        },
-        {
-          "type": "using_directive",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "provide_expression",
-    "named": true,
-    "fields": {
-      "in_block": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "block",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "provide_body",
-          "named": true
-        },
-        {
-          "type": "scope_annotation",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "raise_expression",
     "named": true,
     "fields": {},
@@ -1645,7 +1589,7 @@
       "required": true,
       "types": [
         {
-          "type": "type_identifier",
+          "type": "lifetime_identifier",
           "named": true
         }
       ]
@@ -1660,7 +1604,17 @@
         "required": true,
         "types": [
           {
-            "type": "type_identifier",
+            "type": "lifetime_identifier",
+            "named": true
+          }
+        ]
+      },
+      "parent": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "lifetime_identifier",
             "named": true
           }
         ]
@@ -2175,21 +2129,6 @@
     }
   },
   {
-    "type": "using_directive",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "_expression",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "variant_pattern",
     "named": true,
     "fields": {
@@ -2302,6 +2241,106 @@
     }
   },
   {
+    "type": "wiring_spread",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "with_binding",
+    "named": true,
+    "fields": {
+      "cap": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_identifier",
+            "named": true
+          }
+        ]
+      },
+      "impl": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "_expression",
+            "named": true
+          }
+        ]
+      },
+      "scope": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "lifetime_identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "with_entries",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "wiring_spread",
+          "named": true
+        },
+        {
+          "type": "with_binding",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "with_expression",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "block",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "scope_annotation",
+          "named": true
+        },
+        {
+          "type": "with_entries",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "!",
     "named": false
   },
@@ -2375,6 +2414,10 @@
   },
   {
     "type": "<",
+    "named": false
+  },
+  {
+    "type": "<-",
     "named": false
   },
   {
@@ -2498,6 +2541,10 @@
     "named": false
   },
   {
+    "type": "lifetime_identifier",
+    "named": true
+  },
+  {
     "type": "line_comment",
     "named": true
   },
@@ -2516,10 +2563,6 @@
   {
     "type": "number_literal",
     "named": true
-  },
-  {
-    "type": "provide",
-    "named": false
   },
   {
     "type": "pub",
@@ -2594,7 +2637,7 @@
     "named": false
   },
   {
-    "type": "using",
+    "type": "under",
     "named": false
   },
   {
@@ -2608,6 +2651,10 @@
   {
     "type": "wildcard_pattern",
     "named": true
+  },
+  {
+    "type": "with",
+    "named": false
   },
   {
     "type": "{",
