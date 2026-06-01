@@ -238,6 +238,10 @@
         "named": true
       },
       {
+        "type": "primitive_type",
+        "named": true
+      },
+      {
         "type": "row",
         "named": true
       },
@@ -1506,6 +1510,11 @@
     }
   },
   {
+    "type": "primitive_type",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "raise_expression",
     "named": true,
     "fields": {},
@@ -2469,6 +2478,10 @@
     "named": true
   },
   {
+    "type": "bool",
+    "named": false
+  },
+  {
     "type": "break",
     "named": false
   },
@@ -2478,6 +2491,10 @@
   },
   {
     "type": "catch",
+    "named": false
+  },
+  {
+    "type": "char",
     "named": false
   },
   {
@@ -2509,6 +2526,14 @@
     "named": false
   },
   {
+    "type": "f32",
+    "named": false
+  },
+  {
+    "type": "f64",
+    "named": false
+  },
+  {
     "type": "false",
     "named": false
   },
@@ -2518,6 +2543,22 @@
   },
   {
     "type": "for",
+    "named": false
+  },
+  {
+    "type": "i16",
+    "named": false
+  },
+  {
+    "type": "i32",
+    "named": false
+  },
+  {
+    "type": "i64",
+    "named": false
+  },
+  {
+    "type": "i8",
     "named": false
   },
   {
@@ -2534,6 +2575,10 @@
   },
   {
     "type": "in",
+    "named": false
+  },
+  {
+    "type": "isize",
     "named": false
   },
   {
@@ -2633,11 +2678,31 @@
     "named": true
   },
   {
+    "type": "u16",
+    "named": false
+  },
+  {
+    "type": "u32",
+    "named": false
+  },
+  {
+    "type": "u64",
+    "named": false
+  },
+  {
+    "type": "u8",
+    "named": false
+  },
+  {
     "type": "uncancellable",
     "named": false
   },
   {
     "type": "under",
+    "named": false
+  },
+  {
+    "type": "usize",
     "named": false
   },
   {

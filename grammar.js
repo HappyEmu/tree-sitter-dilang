@@ -252,6 +252,7 @@ module.exports = grammar({
     // =====================================================================
 
     _type: $ => choice(
+      $.primitive_type,
       $.type_identifier,
       $.self_type,
       $.generic_type,
@@ -260,6 +261,16 @@ module.exports = grammar({
       $.function_type,
       $.tuple_type,
       $.row,
+    ),
+
+    // Lowercase built-in scalar types (DEC-024). `Str` and other library types
+    // stay capitalized and parse as `type_identifier`. These names also match the
+    // `identifier` pattern; the `word` directive's keyword extraction promotes
+    // them to `primitive_type` only in type position.
+    primitive_type: _ => choice(
+      'i8', 'i16', 'i32', 'i64', 'isize',
+      'u8', 'u16', 'u32', 'u64', 'usize',
+      'f32', 'f64', 'bool', 'char',
     ),
 
     self_type: _ => 'Self',
@@ -392,7 +403,12 @@ module.exports = grammar({
 
     boolean_literal: _ => choice('true', 'false'),
 
-    number_literal: _ => token(/-?[0-9][0-9_]*(\.[0-9_]+)?/),
+    // Integer/float literals with optional type suffix (DEC-024): `1u64`,
+    // `42i8`, `1.0f32`, `3f32`. A float is digits-with-a-point or digits-with-a-
+    // float-suffix; an integer is digits with an optional integer suffix.
+    number_literal: _ => token(
+      /-?[0-9][0-9_]*(\.[0-9_]+)?(i8|i16|i32|i64|isize|u8|u16|u32|u64|usize|f32|f64)?/
+    ),
 
     char_literal: _ => token(seq(
       "'",
