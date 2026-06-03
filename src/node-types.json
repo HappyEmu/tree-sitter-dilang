@@ -1520,7 +1520,7 @@
     "fields": {},
     "children": {
       "multiple": false,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "_expression",
@@ -2608,6 +2608,10 @@
   {
     "type": "number_literal",
     "named": true
+  },
+  {
+    "type": "open",
+    "named": false
   },
   {
     "type": "pub",

@@ -210,6 +210,7 @@ module.exports = grammar({
     ),
 
     enum_definition: $ => seq(
+      optional('open'),
       'enum',
       field('name', $.type_identifier),
       optional($.type_parameters),
@@ -618,7 +619,7 @@ module.exports = grammar({
     literal_pattern: $ => choice($.string_literal, $.number_literal, $.boolean_literal),
     variant_pattern: $ => prec(1, seq(
       field('name', $.type_identifier),
-      optional(seq('.', $.type_identifier)),
+      optional(seq('.', choice($.type_identifier, $.wildcard_pattern))),
       optional(seq('(', sepBy(',', $._pattern), ')')),
     )),
 
@@ -636,7 +637,7 @@ module.exports = grammar({
       ),
     ),
 
-    raise_expression:    $ => prec.right(PREC.control, seq('raise',    $._expression)),
+    raise_expression:    $ => prec.right(PREC.control, seq('raise', optional($._expression))),
     return_expression:   $ => prec.right(PREC.control, seq('return',   optional($._expression))),
     break_expression:    $ => prec.right(PREC.control, seq('break',    optional($._expression))),
     continue_expression: _ => 'continue',
