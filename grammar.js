@@ -602,7 +602,7 @@ module.exports = grammar({
 
     match_arm: $ => seq(
       field('pattern', $._pattern),
-      '->',
+      '=>',
       field('body', $._expression),
       optional(','),
     ),
@@ -632,7 +632,7 @@ module.exports = grammar({
     catch_clause: $ => seq(
       'catch',
       choice(
-        seq($._pattern, '->', $._expression),
+        seq($._pattern, '=>', $._expression),
         seq('{', repeat($.match_arm), '}'),
       ),
     ),
@@ -699,7 +699,7 @@ module.exports = grammar({
     select_expression: $ => seq('select', '{', repeat($.select_arm), '}'),
     select_arm: $ => seq(
       field('event', $._expression),
-      '->',
+      '=>',
       field('body', $._expression),
       optional(','),
     ),

@@ -3726,7 +3726,7 @@
         },
         {
           "type": "STRING",
-          "value": "->"
+          "value": "=>"
         },
         {
           "type": "FIELD",
@@ -3949,7 +3949,7 @@
                 },
                 {
                   "type": "STRING",
-                  "value": "->"
+                  "value": "=>"
                 },
                 {
                   "type": "SYMBOL",
@@ -4365,7 +4365,7 @@
         },
         {
           "type": "STRING",
-          "value": "->"
+          "value": "=>"
         },
         {
           "type": "FIELD",
